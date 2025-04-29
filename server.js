@@ -87,6 +87,12 @@ builder.defineStreamHandler(async ({ type, id }) => {
 
 const port = process.env.PORT || 7000;
 
+// OPRAVA: správne poskytovanie manifest.json
+app.get('/manifest.json', (req, res) => {
+    res.type('application/json');
+    res.send(builder.manifest);
+});
+
 app.get('/configure', (req, res) => {
     res.send(`<form method="post">
         <h2>Configure Webshare Login</h2>
@@ -102,10 +108,7 @@ app.post('/configure', (req, res) => {
     res.send("✅ Configuration saved! You can now close this page.");
 });
 
-app.get('/manifest.json', (req, res) => {
-    res.send(builder.getInterface().getManifest());
-});
-
+// Routing na katalóg a stream
 app.get('/:resource/:type/:id.json', (req, res) => {
     builder.getInterface().get(req, res);
 });
